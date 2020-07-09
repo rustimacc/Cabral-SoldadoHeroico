@@ -16,6 +16,7 @@ public class GameController : MonoBehaviour
     {
         abrirpanel = false;
         puntos = 1000;
+        Time.timeScale = 1;
     }
 
     // Update is called once per frame

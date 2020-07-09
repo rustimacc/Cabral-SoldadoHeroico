@@ -40,7 +40,10 @@ public class Camaracontroller : MonoBehaviour
             Vector3 posicionobjetivo = jugador.transform.position + pos;
             transform.position = Vector3.SmoothDamp(transform.position, posicionobjetivo, ref velocidad, tiemposuavizado);
             GetComponent<CameraShaker>().RestPositionOffset = transform.position;
-            
+            this.transform.position = new Vector3(
+            Mathf.Clamp(transform.position.x, minpos.x, maxpos.x),
+            this.transform.position.y,
+            Mathf.Clamp(transform.position.z, minpos.y, maxpos.y));
         }
         
     }

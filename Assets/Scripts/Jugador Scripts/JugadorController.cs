@@ -98,7 +98,7 @@ public class JugadorController : MonoBehaviour
             ZoomCamara();
             ApuntadoConJoystick();
         }
-
+        
     }
     private void impulso()
     {
@@ -119,7 +119,7 @@ public class JugadorController : MonoBehaviour
         if (apuntando)
         {
             
-            Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize,11,Time.deltaTime* suavizadocamarazoom);
+            Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize,12,Time.deltaTime* suavizadocamarazoom);
         }
         else
         {
@@ -172,7 +172,7 @@ public class JugadorController : MonoBehaviour
                 tiempoEsquive = Time.time + 1f;
             }
         }
-
+        
     }//movimiento 
     void Movimiento()
     {
@@ -198,9 +198,9 @@ public class JugadorController : MonoBehaviour
         Vector3 movimiento = direccion * vel * Time.deltaTime;
         movimiento += Vector3.up * -9.8f * Time.deltaTime;
         character.Move(movimiento);
+
         
-        //Debug.Log(character.velocity);
-        
+
         
     }//implementacion de movimiento isometrico en personaje
     
@@ -211,11 +211,12 @@ public class JugadorController : MonoBehaviour
         if (!esquivar)
         {
             //stats.vida -= danio;
-            stats.vida -= 120;
+            stats.vida -= danio;
             if (Random.Range(0, 100) >= 50)
                 animator.SetTrigger("golpeado");
             else
                 animator.SetTrigger("golpeado2");
+            
         }
 
         Morir();
@@ -251,7 +252,6 @@ public class JugadorController : MonoBehaviour
     }//muerte del jugador
     IEnumerator findejuego()
     {
-        
         yield return new WaitForSeconds(2);
         UIGeneral.JuegoPausado = UIGeneral.estadoGeneralJuego.JuegoTerminado;
     }

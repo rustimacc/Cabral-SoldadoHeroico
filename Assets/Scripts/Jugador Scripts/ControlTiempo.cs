@@ -29,9 +29,9 @@ public class ControlTiempo : MonoBehaviour
     {
         if (UIGeneral.JuegoPausado == UIGeneral.estadoGeneralJuego.Resume)
         {
-            Controles();
-            Interfaz();
-            Controltiempo();
+            //Controles();
+            //Interfaz();
+            //Controltiempo();
         }
         else
         {

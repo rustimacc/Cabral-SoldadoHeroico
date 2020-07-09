@@ -31,6 +31,9 @@ public class Personaje : MonoBehaviour
     public GameObject enemigo;
     OptimzarRecurso optimizador;
 
+    protected Collider[] ragdolls;
+    protected Rigidbody[] cuerpos;
+
     private void Awake()
     {
         stats = new StatsPersonaje();
@@ -38,14 +41,59 @@ public class Personaje : MonoBehaviour
         objetivoestablecido = false;
         vivo = true;
 
-
+        ragdolls =transform.GetChild(0).GetComponentsInChildren<Collider>(true);
+        cuerpos = transform.GetChild(0).GetComponentsInChildren<Rigidbody>(true);
+        
+        ActivarRagdoll(false);
         jugador = GameObject.FindGameObjectWithTag("Player");
         optimizador = GetComponent<OptimzarRecurso>();
         animator = GetComponent<Animator>();
         agente = GetComponent<NavMeshAgent>();
         cuerpo = GetComponent<Rigidbody>();
     }
-    
+    protected void ActivarRagdoll(bool activar)
+    {
+        if (activar)
+        {
+            foreach (Collider rag in ragdolls)
+            {
+
+                rag.enabled = true;
+                if (rag.tag == "espadaenemigo" || rag.tag == "espadaaliado" ||
+                    rag.tag == "enemigo" ||
+                        rag.tag == "granadero")
+                {
+                    rag.enabled = true;
+                }
+            }
+            foreach (Rigidbody cuerpito in cuerpos)
+            {
+                cuerpito.isKinematic = false;
+                
+            }
+        }
+        else
+        {
+            foreach (Collider rag in ragdolls)
+            {
+
+                rag.enabled = false;
+                if (rag.tag == "espadaenemigo" || rag.tag == "espadaaliado" ||
+                    rag.tag == "enemigo" ||
+                        rag.tag == "granadero")
+                {
+                    rag.enabled = true;
+                }
+            }
+            foreach(Rigidbody cuerpito in cuerpos)
+            {
+                if(cuerpito.tag!="enemigo"||cuerpito.tag!="granadero")
+                    cuerpito.isKinematic = true;
+                else
+                    cuerpito.isKinematic = false;
+            }
+        }
+    }
     protected void ControlarOptimizador()
     {
         if (Vector3.Distance(jugador.transform.position, transform.position) > 25)
@@ -58,12 +106,5 @@ public class Personaje : MonoBehaviour
         }
     }
 
-    protected void SimularquitaVida()
-    {
-        if (optimizador.enabled)
-        {
-            stats.vida -=1*Time.deltaTime;
-            print(stats.vida);
-        }
-    }
+    
 }

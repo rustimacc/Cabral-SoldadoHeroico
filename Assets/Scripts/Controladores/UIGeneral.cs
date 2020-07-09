@@ -32,7 +32,6 @@ public class UIGeneral : MonoBehaviour
     }
     private void Update()
     {
-        VidaSanmartin();
         panelPausa();
         Puntaje();
         BarravidaAliados();
@@ -43,23 +42,10 @@ public class UIGeneral : MonoBehaviour
         }
     }
     
-    private void VidaSanmartin()
-    {
-        if (ControlEtapasdeJuego.estadojuego == ControlEtapasdeJuego.Estadogeneraljuego.Antes)
-        {
-            VidaSM.value -= tiemporegresivoVidaSM * Time.deltaTime;
-        }
-        else
-        {
-
-        }
-    }
+    
     private void ControladorEstado()
     {
-        if (VidaSM.value <= 25)
-        {
-            ControlEtapasdeJuego.estadojuego = ControlEtapasdeJuego.Estadogeneraljuego.Despues;
-        }
+        
         if (ControlTiempo.estado == ControlTiempo.TiempoEstado.desactivado)
         {
             abrirMejoraliado = false;

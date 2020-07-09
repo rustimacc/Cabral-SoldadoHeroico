@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class EnemigoUI : MonoBehaviour
 {
 
-
+    [SerializeField] Canvas canvas;
     public Slider barravida;
 
     RealistaController realistaControl;
@@ -21,6 +21,8 @@ public class EnemigoUI : MonoBehaviour
     void Update()
     {
         UI();
+        if (!realistaControl.vivo)
+            canvas.enabled = false;
     }
 
     void UI()

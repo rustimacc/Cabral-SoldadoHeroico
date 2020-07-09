@@ -32,12 +32,8 @@ public class UIJugador : MonoBehaviour
         MensajesAjugador();
         if(ControlTiempo.estado==ControlTiempo.TiempoEstado.activado)
             Aliados();
-        if (ControlEtapasdeJuego.estadojuego == ControlEtapasdeJuego.Estadogeneraljuego.Despues)
-        {
-            Debug.Log("esto funciona");
-            FlechaDireccionSM();
-        }
-        
+
+        FlechaDireccionSM();
     }
     void FlechaDireccionSM()
     {

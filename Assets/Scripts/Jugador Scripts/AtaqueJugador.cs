@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using EZCameraShake;
 public class AtaqueJugador : MonoBehaviour
 {
     Vector3 impacto;
@@ -33,10 +33,9 @@ public class AtaqueJugador : MonoBehaviour
     {
         Ataque();
         
-        impulso();
         
     }
-
+    
     void Ataque()
     {
         jugadorcontrol.apuntando = Input.GetMouseButton(1);
@@ -51,6 +50,11 @@ public class AtaqueJugador : MonoBehaviour
                 {
                     if (Time.time >= tiempoAtaque)
                     {
+                        
+                        CameraShaker.Instance.ShakeOnce(1f, 2f, .1f, .5f);
+                        Vector3 pos = transform.position + (-transform.forward);
+                        Camera.main.transform.position=Vector3.Lerp(Camera.main.transform.position, pos*500, Time.deltaTime * 100);
+                        //Mathf.Lerp(Camera.main.transform.position, pos, Time.deltaTime * 5);
                         animator.SetTrigger("disparo");
                         Instantiate(bala, jugadorcontrol.rifle.transform.GetChild(2).transform.position, transform.rotation);
                         tiempoAtaque = Time.time + 1f / 2;
@@ -99,7 +103,7 @@ public class AtaqueJugador : MonoBehaviour
         if (impacto.magnitude > 0.2) character.Move(impacto * Time.deltaTime);
         // consumes the impact energy each cycle:
         impacto = Vector3.Lerp(impacto, Vector3.zero, tiempoimpulso * Time.deltaTime);
-        */
+        
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("atacar1") ||
             animator.GetCurrentAnimatorStateInfo(0).IsName("atacar2"))
         {
@@ -107,6 +111,7 @@ public class AtaqueJugador : MonoBehaviour
             character.Move(impulsar);
             
         }
+        */
     }
     private void Impactar(Vector3 dire, float fuerza)
     {

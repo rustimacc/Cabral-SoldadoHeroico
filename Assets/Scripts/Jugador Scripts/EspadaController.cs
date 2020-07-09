@@ -28,7 +28,7 @@ public class EspadaController : MonoBehaviour
                 {
                     //StartCoroutine(activarCollider());
                     //GetComponent<Collider>().enabled = false;
-                    other.GetComponent<RealistaController>().Danio(Random.Range(20,30));
+                    other.GetComponent<RealistaController>().Danio(Random.Range(20,30),transform.up);
                     
                     //other.GetComponent<RealistaController>().Empujehaciatras();
                     //Rigidbody cuerpo = other.gameObject.GetComponent<Rigidbody>();
@@ -53,7 +53,7 @@ public class EspadaController : MonoBehaviour
                 if (jugadorControl.atacar)
                 {
                     //StartCoroutine(activarCollider());
-                    other.GetComponent<SargentoController>().Danio(Random.Range(20, 30));
+                    other.GetComponent<SargentoController>().Danio(Random.Range(20, 30),transform.up);
                     if(Random.Range(0,100)<10)
                         other.GetComponent<RealistaController>().Empujehaciatras();
                 }

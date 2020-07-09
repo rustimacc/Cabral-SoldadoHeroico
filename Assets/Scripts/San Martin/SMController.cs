@@ -36,10 +36,7 @@ public class SMController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (ControlEtapasdeJuego.estadojuego == ControlEtapasdeJuego.Estadogeneraljuego.Despues)
-        {
-            estado = state.Caido;
-        }
+        
             ControlEstados();
     }
     private void ControlEstados()

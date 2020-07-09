@@ -92,6 +92,7 @@ public class JugadorCollider : MonoBehaviour
                 estelita.enabled = true;
             jugadorControl.esquivar = true;
 
+            Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize, 11, Time.deltaTime * 6);
         }
         else
         {
@@ -99,6 +100,7 @@ public class JugadorCollider : MonoBehaviour
                 estelita.enabled = false;
 
             jugadorControl.esquivar = false;
+            Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize, 10, Time.deltaTime * 6);
         }
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("golpeadoatras"))
         {

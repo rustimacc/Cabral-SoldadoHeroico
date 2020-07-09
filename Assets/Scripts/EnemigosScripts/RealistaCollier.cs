@@ -17,10 +17,10 @@ public class RealistaCollier : MonoBehaviour
     void Start()
     {
         jugador = GameObject.FindGameObjectWithTag("Player");
-        realistaControl = GetComponent<RealistaController>();
         animator = GetComponent<Animator>();
         jugadorcontroller = GameObject.FindGameObjectWithTag("Player").GetComponent<JugadorController>();
-        realistacontrol = GetComponent<RealistaController>();
+        realistaControl = GetComponent<RealistaController>();
+        
         golpeado = false;
     }
 
@@ -34,13 +34,13 @@ public class RealistaCollier : MonoBehaviour
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("atacar"))
         {
             //realistacontrol.atacando = true;
-            realistacontrol.avanzar = false;
+            //realistacontrol.avanzar = false;
             if(espada!=null)
                 espada.GetComponent<EspadaEnemigoController>().atacando = true;
         }
         else
         {
-            realistacontrol.avanzar = true;
+            //realistacontrol.avanzar = true;
             if (espada != null)
                 espada.GetComponent<EspadaEnemigoController>().atacando = false;
             //realistacontrol.atacando = false;
@@ -61,12 +61,6 @@ public class RealistaCollier : MonoBehaviour
             haciatras = false;
         }
     }
-    IEnumerator haciaatras()
-    {
-        transform.position += jugador.transform.forward * jugador.GetComponent<JugadorController>().impulsogolpe * Time.deltaTime;
-        yield return new WaitForSeconds(0.05f);
-        haciatras = true;
-    }
 
 
 
@@ -77,16 +71,16 @@ public class RealistaCollier : MonoBehaviour
         {
             
             case "bala":
-                realistaControl.Danio(Random.Range(50,110));
+                realistaControl.Danio(Random.Range(50,110),Vector3.zero);
                 realistacontrol.mover = true;
                 break;
             case "bayonetajugador":
                 other.gameObject.GetComponent<Collider>().enabled = false;
-                realistaControl.Danio(25);
+                realistaControl.Danio(25,Vector3.zero);
                 break;
             case "espadaaliado":
                 //other.gameObject.GetComponent<Collider>().enabled = false;
-                realistaControl.Danio(Random.Range(10, 25));
+                realistaControl.Danio(Random.Range(10, 25),other.transform.up);
                 break;
         }
     }

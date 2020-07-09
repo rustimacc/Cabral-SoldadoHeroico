@@ -22,22 +22,20 @@ public class RealistaController : Personaje
     float tiemporefrescoposicion = 0;
     Transform objetivoataque;
 
-    public Transform[] posCamino;
-    int camino;
-
-    //Inteligencia Artificial
-    protected Transform objetivo;
 
     //protected GameObject jugador;
-    
-    
+    public Transform BloodCube;
+
+
     public GameObject popup;
+    public GameObject arma;
     void Start()
     {
         estado = state.Patrullar;
 
         agente.speed = vel;
 
+        objetivoataque = GameObject.FindGameObjectWithTag("Sanmartin").transform;
         //tiemporefrescoposicion = 40;
         //agente.destination = posbatalla.position;
 
@@ -48,7 +46,6 @@ public class RealistaController : Personaje
         mover = false;
         apuntando = false;
 
-        camino = 0;
     }
 
     // Update is called once per frame
@@ -74,9 +71,35 @@ public class RealistaController : Personaje
                 break;
         }
     }
-   
 
-    public void Danio(int danio)
+    private void Blood(Transform tf, Transform blood)
+    {
+        GameObject bo = Instantiate<GameObject>(blood.gameObject);
+        bo.transform.position = transform.position + Vector3.up * 1.5f;
+        bo.transform.localScale *= Random.Range(0.5f, 1.5f);
+        Rigidbody rig = bo.GetComponent<Rigidbody>();
+        rig.AddExplosionForce(200f, tf.position + Vector3.down * 0.5f, 3f);
+        rig.angularVelocity = Vector3.one;
+        Destroy(bo, 10f);
+        Collider c = bo.GetComponent<Collider>();
+        if (c)
+        {
+            Destroy(c, 5f);
+        }
+    }
+    private void sangrar()
+    {
+        int len = Random.Range(6, 30);
+        for (int i = 0; i < len; i++)
+        {
+            Blood(transform, BloodCube);
+            if (i < len * 0.3f)
+            {
+                Blood(transform, BloodCube);
+            }
+        }
+    }
+    public void Danio(int danio,Vector3 direespada)
     {
         vida -= danio;
         GameObject pop= Instantiate(popup, transform.GetChild(1).transform.position, Quaternion.identity);
@@ -85,42 +108,62 @@ public class RealistaController : Personaje
             pop.transform.GetChild(0).GetComponent<TextMeshPro>().color = Color.red;
 
         pop.transform.GetChild(0).GetComponent<TextMeshPro>().text = danio.ToString();
-
+        Empujehaciatras();
         Destroy(pop, 1);
         animator.SetTrigger("danio1");
-
-        Morir();
+        sangrar();
+        Morir(direespada);
     }
     public void Empujehaciatras()
     {
         if (vida > 0)
             cuerpo.AddForce(-transform.forward * jugador.GetComponent<JugadorController>().impulsogolpe, ForceMode.Impulse);
     }
-    void Morir()
+    void Morir(Vector3 direespada)
     {
         if (vida <= 0 && vivo)
         {
             gameObject.layer = LayerMask.NameToLayer("Default");
             GetComponent<Collider>().enabled = false;
-            agente.enabled = false;
-            //Debug.Log("murio");
-            float probabilidad = Random.Range(0, 100);
+            agente.isStopped=true;
+            
+            ActivarRagdoll(true);
+            
+            animator.enabled = false;
+            atacando = false;
+            //cuerpo.AddForce(-transform.forward + new Vector3(0, .35f, 0)* Random.Range(5,10), ForceMode.Impulse);
+            //transform.GetChild(0).transform.localPosition = new Vector3(0, 2f, 0);
+            
+            foreach(Rigidbody cuerpito in cuerpos)
+            {
+                cuerpito.AddForce(-transform.forward * Random.Range(10, 50), ForceMode.Impulse);
+            }
 
-            if (probabilidad > 0 && probabilidad <= 33)
-            {
-                animator.SetTrigger("muerte1");
-            }
-            if (probabilidad > 33 && probabilidad <= 66)
-            {
-                animator.SetTrigger("muerte2");
-            }
-            if (probabilidad > 66 && probabilidad <= 100)
-            {
-                animator.SetTrigger("muerte3");
-            }
-            Destroy(this.gameObject, 6);
+            //transform.GetChild(0).transform.localPosition = new Vector3(0, 3f, 0);
+            //transform.position = new Vector3(transform.position.x, 5f, transform.position.z);
+            //cuerpo.AddForce(direespada + new Vector3(0, .2f, 0) * Random.Range(5, 10), ForceMode.Impulse);
+            //cuerpo.AddExplosionForce(50, jugador.transform.position, 10);
+            arma.transform.parent = null;
+            arma.GetComponent<Rigidbody>().isKinematic = false;
+            arma.GetComponent<Rigidbody>().AddExplosionForce(50, jugador.transform.position, 10);
+            arma.GetComponent<Collider>().isTrigger = false;
+            
+            StartCoroutine(camaraLenta());
+            //cuerpo.AddForce(Vector3.up * 100, ForceMode.Impulse);
+            Destroy(this.gameObject, 15);
+            Destroy(arma, 15);
+            ControlEtapasdeJuego.enemigosActivos--;
             vivo = false;
         }
+    }
+    
+    IEnumerator camaraLenta()
+    {
+        Time.timeScale = .8f;
+        print(Time.timeScale);
+        yield return new WaitForSeconds(.2f);
+        print(Time.timeScale);
+        Time.timeScale = 1;
     }
     public virtual void Pelear()
     {
@@ -193,8 +236,7 @@ public class RealistaController : Personaje
         agente.angularSpeed = 250;
         agente.speed = velCorrer;
 
-        agente.destination = posCamino[camino].position;
-        CambiarCamino();
+        agente.destination = objetivoataque.position;
 
         /*
         tiemporefrescoposicion -= Time.deltaTime;
@@ -216,14 +258,7 @@ public class RealistaController : Personaje
         }
 
     }
-    void CambiarCamino()
-    {
-        if (agente.remainingDistance <= agente.stoppingDistance)
-        {
-            camino++;
-            print(posCamino[camino].name);
-        }
-    }
+    
 
 
     void Vision()

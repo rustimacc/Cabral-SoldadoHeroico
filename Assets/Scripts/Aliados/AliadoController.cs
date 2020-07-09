@@ -141,8 +141,6 @@ public class AliadoController : Personaje
             agente.destination = objetivo.position;
 
 
-            SimularquitaVida();
-
             if (agente.remainingDistance > agente.stoppingDistance)
             {
                 animator.SetBool("corriendo", true);
@@ -337,7 +335,7 @@ public class AliadoController : Personaje
                 animator.SetTrigger("muerte3");
             }
             Destroy(this.gameObject, 6);
-
+            
             vivo = false;
         }
     }//muerte del jugador
