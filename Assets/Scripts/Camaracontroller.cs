@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
+using UnityEngine.Rendering.PostProcessing;
 using EZCameraShake;
 public class Camaracontroller : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class Camaracontroller : MonoBehaviour
     public float suavizado;
     public float tiemposuavizado = .5f;
     public float velDesplazamientocamara;
+    
     private Vector3 velocidad;
     Vector3 pos;
 
@@ -17,6 +19,9 @@ public class Camaracontroller : MonoBehaviour
 
     bool camaraPerspectiva;
 
+    //yeites
+    private PostProcessVolume volume;
+    public ChromaticAberration chromatic;
 
     private void Start()
     {
@@ -25,6 +30,12 @@ public class Camaracontroller : MonoBehaviour
         pos = transform.position - jugador.transform.position;
 
         camaraPerspectiva = true;
+
+        volume = GetComponent<PostProcessVolume>();
+        volume.profile.TryGetSettings(out chromatic);
+        
+        
+
     }
 
 
@@ -47,5 +58,8 @@ public class Camaracontroller : MonoBehaviour
         }
         
     }
+
+
+
 
 }

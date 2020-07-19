@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using EZCameraShake;
 public class EspadaController : MonoBehaviour
 {
     GameObject jugador;
@@ -26,14 +26,9 @@ public class EspadaController : MonoBehaviour
                 
                 if (jugadorControl.atacar)
                 {
-                    //StartCoroutine(activarCollider());
-                    //GetComponent<Collider>().enabled = false;
+                   
                     other.GetComponent<RealistaController>().Danio(Random.Range(20,30),transform.up);
-                    
-                    //other.GetComponent<RealistaController>().Empujehaciatras();
-                    //Rigidbody cuerpo = other.gameObject.GetComponent<Rigidbody>();
-                    //cuerpo.AddForce(jugador.transform.forward * jugadorControl.impulsogolpe, ForceMode.Impulse);
-
+                    CameraShaker.Instance.ShakeOnce(2f, 2f, .1f, 1f);
                     if (other.GetComponent<RealistaController>().vida <=0)
                     {
                         GameController.puntos += 50;

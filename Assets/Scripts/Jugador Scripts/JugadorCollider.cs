@@ -18,6 +18,9 @@ public class JugadorCollider : MonoBehaviour
     
     float tiempoEspada;
     float suavizadocamaraTemp;
+
+    Camaracontroller camara;
+
     private void Start()
     {
         
@@ -30,6 +33,7 @@ public class JugadorCollider : MonoBehaviour
         
         tiempoEspada = 0;
         suavizadocamaraTemp= Camera.main.GetComponent<Camaracontroller>().suavizado;
+        camara = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camaracontroller>();
     }
 
     private void Update()
@@ -91,8 +95,13 @@ public class JugadorCollider : MonoBehaviour
             foreach (TrailRenderer estelita in estelas)
                 estelita.enabled = true;
             jugadorControl.esquivar = true;
-
+            //efectos
             Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize, 11, Time.deltaTime * 6);
+            camara.chromatic.intensity.value = Mathf.Lerp(
+                camara.chromatic.intensity.value,
+                .137f,
+                Time.deltaTime*6
+                );
         }
         else
         {
@@ -101,6 +110,12 @@ public class JugadorCollider : MonoBehaviour
 
             jugadorControl.esquivar = false;
             Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize, 10, Time.deltaTime * 6);
+            Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize, 11, Time.deltaTime * 6);
+            camara.chromatic.intensity.value = Mathf.Lerp(
+                camara.chromatic.intensity.value,
+                0,
+                Time.deltaTime * 6
+                );
         }
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("golpeadoatras"))
         {

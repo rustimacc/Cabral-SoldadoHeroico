@@ -63,7 +63,7 @@ public class JugadorController : MonoBehaviour
 
         //atributos
         stats.vida = 100;
-        stats.velAtaque = 1.5f;
+        stats.velAtaque = 1.75f;
         animator.SetFloat("velAtaque", stats.velAtaque);
 
 

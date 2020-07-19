@@ -52,8 +52,8 @@ public class AtaqueJugador : MonoBehaviour
                     {
                         
                         CameraShaker.Instance.ShakeOnce(1f, 2f, .1f, .5f);
-                        Vector3 pos = transform.position + (-transform.forward);
-                        Camera.main.transform.position=Vector3.Lerp(Camera.main.transform.position, pos*500, Time.deltaTime * 100);
+                        //Vector3 pos = transform.position + (-transform.forward);
+                        //Camera.main.transform.position=Vector3.Lerp(Camera.main.transform.position, pos*500, Time.deltaTime * 100);
                         //Mathf.Lerp(Camera.main.transform.position, pos, Time.deltaTime * 5);
                         animator.SetTrigger("disparo");
                         Instantiate(bala, jugadorcontrol.rifle.transform.GetChild(2).transform.position, transform.rotation);
@@ -73,12 +73,12 @@ public class AtaqueJugador : MonoBehaviour
 
         }
 
-        if (Input.GetButtonDown("Fire1") && !jugadorcontrol.apuntando)
+        if (Input.GetButton("Fire1") && !jugadorcontrol.apuntando && Time.time >= tiempoAtaque)
         {
             jugadorcontrol.ApuntadoConJoystick();
 
-            if (Time.time >= tiempoAtaque)
-            {
+            //if (Time.time >= tiempoAtaque)
+            //{
                 //Impactar(transform.forward, fuerzaimpulso);
 
 
@@ -87,8 +87,8 @@ public class AtaqueJugador : MonoBehaviour
                 else
                     animator.SetTrigger("ataque2");
 
-                tiempoAtaque = Time.time + 1f / 2;
-            }
+                tiempoAtaque = Time.time + 1f / jugadorcontrol.stats.velAtaque;
+            //}
         }
 
         animator.SetBool("apuntando", jugadorcontrol.apuntando);

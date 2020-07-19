@@ -26,6 +26,7 @@ public class EspadaEnemigoController : MonoBehaviour
                 if (atacando)
                 {
                     //Debug.Log("colision atacando");
+                    CameraShaker.Instance.ShakeOnce(3f, 3f, .1f, 1f);
                     jugador.GetComponent<JugadorController>().Danio(Random.Range(5,12));
                     StartCoroutine(activarCollider());
                     CameraShaker.Instance.ShakeOnce(4, 4, .1f, 1);

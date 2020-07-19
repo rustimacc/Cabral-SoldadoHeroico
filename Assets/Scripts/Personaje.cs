@@ -28,6 +28,7 @@ public class Personaje : MonoBehaviour
 
 
     protected GameObject jugador;
+    protected GameObject SM;
     public GameObject enemigo;
     OptimzarRecurso optimizador;
 
