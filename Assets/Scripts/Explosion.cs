@@ -7,16 +7,13 @@ public class Explosion : MonoBehaviour
     public Transform SangreRoja;
     public Transform SangreBlanca;
     public LayerMask enemigosmask;
+
+    AudioSource sonidos;
     void Start()
     {
-        
+        sonidos = GetComponent<AudioSource>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     private void Blood(Transform tf, Transform blood)
     {
@@ -50,7 +47,7 @@ public class Explosion : MonoBehaviour
     {
         Destroy(transform.GetChild(0).gameObject);
         sangrar();
-
+        sonidos.Play();
         Collider[] enemigos = Physics.OverlapSphere(transform.position, 5, enemigosmask);
 
         foreach(Collider enemigo in enemigos)

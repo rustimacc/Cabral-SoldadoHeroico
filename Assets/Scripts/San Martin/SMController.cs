@@ -12,11 +12,11 @@ public class SMController : MonoBehaviour
 
     GameObject jugador;
 
-
+    float emi = 100;
 
 
     //Variables
-    public static int vida = 100;
+    public static float vida = 100;
     Vector3 objetivo;
     NavMeshAgent agente;
     Animator animator;
@@ -116,5 +116,32 @@ public class SMController : MonoBehaviour
         dire.y = 0;
         transform.forward = dire;
     }
-    
+
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.CompareTag("curaSanmartin"))
+        {
+            vida += 1 * Time.deltaTime;
+            vida = Mathf.Clamp(vida, 0, 100);
+            print(vida);
+
+            StartCoroutine(desactivarCura(other.gameObject));
+
+        
+        }
+    }
+
+    IEnumerator desactivarCura(GameObject bandera)
+    {
+            float emi = 100;
+        ParticleSystem particula = bandera.transform.GetChild(1).GetComponent<ParticleSystem>();
+        ParticleSystem.EmissionModule emimodulo = particula.emission;
+        emi -= 10 * Time.deltaTime;
+        particula.Emit(Mathf.RoundToInt(emi));
+        yield return new WaitForSeconds(10);
+        bandera.GetComponent<Collider>().enabled = false;
+        particula.Stop();
+    }
+
 }

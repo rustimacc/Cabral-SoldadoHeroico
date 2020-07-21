@@ -23,6 +23,7 @@ public class RealistaController : Personaje
     float tiemporefrescoposicion = 0;
     Transform objetivoataque;
 
+    ControladorSonidos sonidos;
 
     //protected GameObject jugador;
     public Transform SangreRoja, SangreBlanca;
@@ -38,6 +39,8 @@ public class RealistaController : Personaje
         estado = state.Patrullar;
 
         agente.speed = vel;
+
+        sonidos = GetComponent<ControladorSonidos>();
 
         objetivoataque = GameObject.FindGameObjectWithTag("Sanmartin").transform;
         SM = GameObject.FindGameObjectWithTag("Sanmartin");
@@ -106,6 +109,9 @@ public class RealistaController : Personaje
     public void Danio(int danio,Vector3 direespada)
     {
         vida -= danio;
+
+        sonidos.Reproducir(Random.Range(0, 2), .1f, .5f, Random.Range(.9f, 1.2f), false);
+
         GameObject pop= Instantiate(popup, transform.GetChild(1).transform.position, Quaternion.identity);
 
         if (danio > 25)
@@ -162,6 +168,7 @@ public class RealistaController : Personaje
         if (vida <= 0 && vivo)
         {
             vivo = false;
+            sonidos.Reproducir(Random.Range(2, sonidos.cantidadClips()), .1f, .5f, Random.Range(.9f, 1.2f), false);
             gameObject.layer = LayerMask.NameToLayer("Default");
             GetComponent<Collider>().enabled = false;
             agente.isStopped=true;

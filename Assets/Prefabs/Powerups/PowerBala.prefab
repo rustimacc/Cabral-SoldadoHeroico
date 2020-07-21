@@ -139,7 +139,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d5965df84ea7514981307da80f9ad78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  limitedistancia: 25
+  limitedistancia: 35
   usaroptimzacionchildren: 1
   powerup: 1
   mostrar: []

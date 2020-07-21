@@ -14,6 +14,7 @@ public class AtaqueJugador : MonoBehaviour
     JugadorController jugadorcontrol;
     Animator animator;
     CharacterController character;
+    ControladorSonidos sonidos;
     //objetos
     public static Vector3 direBala;
     
@@ -23,7 +24,7 @@ public class AtaqueJugador : MonoBehaviour
         jugadorcontrol = GetComponent<JugadorController>();
         animator = GetComponent<Animator>();
         character = GetComponent<CharacterController>();
-
+        sonidos = GetComponent<ControladorSonidos>();
         
         
 
@@ -58,6 +59,7 @@ public class AtaqueJugador : MonoBehaviour
                 {
                     if (Time.time >= tiempoAtaque)
                     {
+                        sonidos.Reproducir(0, 0.6f,.5f, false);
                         StartCoroutine(lineadisparo());
                         CameraShaker.Instance.ShakeOnce(1f, 2f, .1f, .5f);
                         direBala = jugadorcontrol.rifle.transform.right;

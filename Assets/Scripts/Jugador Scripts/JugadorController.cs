@@ -51,7 +51,7 @@ public class JugadorController : MonoBehaviour
     //componentes
     CharacterController character;
     Animator animator;
-
+    ControladorSonidos sonidos;
     public GameObject espada, rifle;
 
     private void Awake()
@@ -59,6 +59,7 @@ public class JugadorController : MonoBehaviour
         stats = new StatsPersonaje();
         character = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
+        sonidos = GetComponent<ControladorSonidos>();
     }
 
     void Start()
@@ -185,6 +186,7 @@ public class JugadorController : MonoBehaviour
             }
         }
         Arrastrar();
+        //espada.GetComponent<Collider>().enabled = atacando;
     }//movimiento 
 
     private void Arrastrar()
@@ -270,7 +272,7 @@ public class JugadorController : MonoBehaviour
         if (stats.vida <= 0 && vivo)
         {
             Debug.Log("murio");
-
+            sonidos.Reproducir(Random.Range(1, sonidos.cantidadClips()), 0, false);
             float probabilidad = Random.Range(0, 100);
 
             if (probabilidad > 0 && probabilidad <= 33)

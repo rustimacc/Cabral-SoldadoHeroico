@@ -66,7 +66,7 @@ public class RealistaCollier : MonoBehaviour
             
             case "bala":
                 realistaControl.Danio(Random.Range(50,110),Vector3.zero);
-                realistacontrol.mover = true;
+                //realistacontrol.mover = true;
                 break;
             case "bayonetajugador":
                 other.gameObject.GetComponent<Collider>().enabled = false;
