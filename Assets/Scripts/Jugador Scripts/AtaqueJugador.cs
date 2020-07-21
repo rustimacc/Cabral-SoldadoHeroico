@@ -15,6 +15,7 @@ public class AtaqueJugador : MonoBehaviour
     Animator animator;
     CharacterController character;
     //objetos
+    public static Vector3 direBala;
     
     public GameObject bala;
     void Start()
@@ -35,7 +36,12 @@ public class AtaqueJugador : MonoBehaviour
         
         
     }
-    
+    IEnumerator lineadisparo()
+    {
+        jugadorcontrol.rifle.GetComponent<LineRenderer>().enabled = false;
+        yield return new WaitForSeconds(1);
+        jugadorcontrol.rifle.GetComponent<LineRenderer>().enabled = true;
+    }
     void Ataque()
     {
         jugadorcontrol.apuntando = Input.GetMouseButton(1);
@@ -43,24 +49,26 @@ public class AtaqueJugador : MonoBehaviour
         if (Input.GetButton("Fire2"))
         {
             jugadorcontrol.apuntando = true;
-
+            if (jugadorcontrol.arrastrar)
+                jugadorcontrol.arrastrar = false;
             if (Input.GetButtonDown("Fire1") && jugadorcontrol.permitirdisparo)
             {
+                Cursor.visible = false;
                 if (jugadorcontrol.cantidadBalas > 0)
                 {
                     if (Time.time >= tiempoAtaque)
                     {
-                        
+                        StartCoroutine(lineadisparo());
                         CameraShaker.Instance.ShakeOnce(1f, 2f, .1f, .5f);
-                        //Vector3 pos = transform.position + (-transform.forward);
-                        //Camera.main.transform.position=Vector3.Lerp(Camera.main.transform.position, pos*500, Time.deltaTime * 100);
-                        //Mathf.Lerp(Camera.main.transform.position, pos, Time.deltaTime * 5);
+                        direBala = jugadorcontrol.rifle.transform.right;
+                        Instantiate(bala, jugadorcontrol.rifle.transform.GetChild(2).transform.position, Quaternion.identity);
                         animator.SetTrigger("disparo");
-                        Instantiate(bala, jugadorcontrol.rifle.transform.GetChild(2).transform.position, transform.rotation);
                         tiempoAtaque = Time.time + 1f / 2;
                     }
                     jugadorcontrol.cantidadBalas--;
+                    jugadorcontrol.cantidadBalas = Mathf.Clamp(jugadorcontrol.cantidadBalas, 0, 3);
                 }
+                /*
                 else
                 {
                     if (Time.time >= tiempoAtaque)
@@ -69,6 +77,7 @@ public class AtaqueJugador : MonoBehaviour
                         tiempoAtaque = Time.time + 1f / 2;
                     }
                 }
+                */
             }
 
         }
@@ -76,19 +85,16 @@ public class AtaqueJugador : MonoBehaviour
         if (Input.GetButton("Fire1") && !jugadorcontrol.apuntando && Time.time >= tiempoAtaque)
         {
             jugadorcontrol.ApuntadoConJoystick();
+            if (jugadorcontrol.arrastrar)
+                jugadorcontrol.arrastrar = false;
 
-            //if (Time.time >= tiempoAtaque)
-            //{
-                //Impactar(transform.forward, fuerzaimpulso);
-
-
-                if (Random.Range(0, 100) >= 50)
+            if (Random.Range(0, 100) >= 50)
                     animator.SetTrigger("ataque");
                 else
                     animator.SetTrigger("ataque2");
 
                 tiempoAtaque = Time.time + 1f / jugadorcontrol.stats.velAtaque;
-            //}
+            
         }
 
         animator.SetBool("apuntando", jugadorcontrol.apuntando);

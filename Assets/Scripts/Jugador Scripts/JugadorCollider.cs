@@ -117,6 +117,16 @@ public class JugadorCollider : MonoBehaviour
                 Time.deltaTime * 6
                 );
         }
+        /*
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("disparo"))
+        {
+            jugadorControl.rifle.GetComponent<LineRenderer>().enabled = false;
+        }
+        else
+        {
+            jugadorControl.rifle.GetComponent<LineRenderer>().enabled = true;
+        }
+        */
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("golpeadoatras"))
         {
             //cuerpo.AddForce(-transform.forward * 80, ForceMode.Impulse);
@@ -230,17 +240,15 @@ public class JugadorCollider : MonoBehaviour
                 Destroy(other.gameObject);
                 break;
             case "masbalas":
-                if (jugadorControl.cantidadBalas < 3)
-                {
                     jugadorControl.cantidadBalas++;
+                    jugadorControl.cantidadBalas = Mathf.Clamp(jugadorControl.cantidadBalas, 0, 3);
                     Destroy(other.gameObject);
-                }
+                    
                 break;
             case "cura":
 
                 jugadorControl.stats.vida += 50;
-                if (jugadorControl.stats.vida > 100)
-                    jugadorControl.stats.vida = 100;
+                jugadorControl.stats.vida = Mathf.Clamp(jugadorControl.stats.vida, 0, 100);
                 Destroy(other.gameObject);
                 break;
         }

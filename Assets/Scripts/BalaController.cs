@@ -14,6 +14,7 @@ public class BalaController : MonoBehaviour
     {
         tiempodestruir = 0;
         cuerpo = GetComponent<Rigidbody>();
+        transform.forward = -AtaqueJugador.direBala;
         cuerpo.velocity = transform.forward * vel;
 
     }

@@ -33,14 +33,11 @@ public class RealistaCollier : MonoBehaviour
     {
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("atacar"))
         {
-            //realistacontrol.atacando = true;
-            //realistacontrol.avanzar = false;
             if(espada!=null)
                 espada.GetComponent<EspadaEnemigoController>().atacando = true;
         }
         else
         {
-            //realistacontrol.avanzar = true;
             if (espada != null)
                 espada.GetComponent<EspadaEnemigoController>().atacando = false;
             //realistacontrol.atacando = false;
@@ -51,9 +48,6 @@ public class RealistaCollier : MonoBehaviour
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("danio1"))
         {
             golpeado = true;
-            //transform.position += jugador.transform.forward * jugador.GetComponent<JugadorController>().impulsogolpe *(Time.deltaTime*.2f);
-            //cuerpo.AddForce(jugador.transform.forward * jugador.GetComponent<JugadorController>().impulsogolpe, ForceMode.Impulse);
-            //cuerpo.AddForce(-transform.forward * jugador.GetComponent<JugadorController>().impulsogolpe, ForceMode.Impulse);
         }
         else
         {
@@ -79,7 +73,6 @@ public class RealistaCollier : MonoBehaviour
                 realistaControl.Danio(25,Vector3.zero);
                 break;
             case "espadaaliado":
-                //other.gameObject.GetComponent<Collider>().enabled = false;
                 realistaControl.Danio(Random.Range(10, 25),other.transform.up);
                 break;
         }

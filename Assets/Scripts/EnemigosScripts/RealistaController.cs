@@ -30,6 +30,9 @@ public class RealistaController : Personaje
 
     public GameObject popup;
     public GameObject arma;
+
+    public GameObject[] PowerUps;
+
     void Start()
     {
         estado = state.Patrullar;
@@ -38,8 +41,6 @@ public class RealistaController : Personaje
 
         objetivoataque = GameObject.FindGameObjectWithTag("Sanmartin").transform;
         SM = GameObject.FindGameObjectWithTag("Sanmartin");
-        //tiemporefrescoposicion = 40;
-        //agente.destination = posbatalla.position;
 
         disparoefectuado = false;
         atacando = false;
@@ -117,24 +118,59 @@ public class RealistaController : Personaje
         sangrar();
         Morir(direespada);
     }
+    public void DanioExplosion(Vector3 explo)
+    {
+        vida = -10;
+        if (vida <= 0 && vivo)
+        {
+            vivo = false;
+            gameObject.layer = LayerMask.NameToLayer("Default");
+            GetComponent<Collider>().enabled = false;
+            agente.isStopped = true;
+            ActivarRagdoll(true);
+
+            animator.enabled = false;
+            atacando = false;
+
+            SpawnearPowerup();
+            foreach (Rigidbody cuerpito in cuerpos)
+            {
+                cuerpito.AddExplosionForce(1000, explo, 5);
+                //cuerpito.AddForce(-transform.forward * Random.Range(10, 50), ForceMode.Impulse);
+            }
+
+            arma.transform.parent = null;
+            arma.GetComponent<Rigidbody>().isKinematic = false;
+            arma.GetComponent<Rigidbody>().AddExplosionForce(500, explo, 10);
+            arma.GetComponent<Collider>().isTrigger = false;
+
+            StartCoroutine(camaraLenta());
+            Destroy(this.gameObject, 15);
+            Destroy(arma, 15);
+            //ControlEtapasdeJuego.enemigosActivos--;
+            SistemaSpawn.EnemigosActivos--;
+            Debug.Log(SistemaSpawn.EnemigosActivos);
+        }
+    }
     public void Empujehaciatras()
     {
         if (vida > 0)
-            cuerpo.AddForce(-transform.forward * jugador.GetComponent<JugadorController>().impulsogolpe, ForceMode.Impulse);
+            cuerpo.AddForce(jugador.transform.forward * Random.Range(10, jugador.GetComponent<JugadorController>().impulsogolpe), ForceMode.Impulse);
     }
     void Morir(Vector3 direespada)
     {
         if (vida <= 0 && vivo)
         {
+            vivo = false;
             gameObject.layer = LayerMask.NameToLayer("Default");
             GetComponent<Collider>().enabled = false;
             agente.isStopped=true;
-            
             ActivarRagdoll(true);
             
             animator.enabled = false;
             atacando = false;
             
+            SpawnearPowerup();
             foreach(Rigidbody cuerpito in cuerpos)
             {
                 cuerpito.AddForce(-transform.forward * Random.Range(10, 50), ForceMode.Impulse);
@@ -150,7 +186,7 @@ public class RealistaController : Personaje
             Destroy(arma, 15);
             //ControlEtapasdeJuego.enemigosActivos--;
             SistemaSpawn.EnemigosActivos--;
-            vivo = false;
+            Debug.Log(SistemaSpawn.EnemigosActivos);
         }
     }
     
@@ -243,7 +279,21 @@ public class RealistaController : Personaje
 
     }
     
+    private void SpawnearPowerup()
+    {
+        float probabilidad = Random.Range(0, 100);
 
+        if (probabilidad < 20)
+        {
+            Vector3 pos = new Vector3(transform.position.x, 5, transform.position.z);
+            Instantiate(PowerUps[Random.Range( 0, PowerUps.Length)], pos, Quaternion.identity);
+        }
+        else
+        {
+            return;
+        }
+
+    }
 
     void Vision()
     {
@@ -256,8 +306,8 @@ public class RealistaController : Personaje
             {
                 objetivoestablecido = true;
                 //enemigos = enemigos.OrderBy(enemigo => Vector3.Distance(transform.position, enemigo.transform.position)).ToArray();
-                //enemigo = enemigos[Random.Range(0, enemigos.Length)].gameObject;
-                compararDistancia();
+                enemigo = enemigos[Random.Range(0, enemigos.Length)].gameObject;
+                //compararDistancia();
             }
             
             estado = state.Pelear;
@@ -272,7 +322,7 @@ public class RealistaController : Personaje
         float distanciaJugador,distanciaSM;
         distanciaJugador = Vector3.Distance(transform.position, jugador.transform.position);
         distanciaSM = Vector3.Distance(transform.position, SM.transform.position);
-
+        
         if (distanciaJugador > distanciaSM)
         {
             enemigo =jugador;
@@ -289,7 +339,7 @@ public class RealistaController : Personaje
             animator.SetFloat("velataque", Random.Range(1, 1.6f));
             animator.SetTrigger("ataque");
 
-            tiempoataque = Time.time + 1 / 1;
+            tiempoataque = Time.time + 1 / animator.GetFloat("velataque");
         }
     }
 

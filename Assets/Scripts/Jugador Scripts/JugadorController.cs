@@ -18,8 +18,9 @@ public class JugadorController : MonoBehaviour
     //movimiento
     public Vector3 mov;
     public float vel = 5f;//velocidad del personaje
-    float vel2 = 8;
     public float velesquive;
+    public float velarrastrar;
+    public float vel2 = 8;
     Vector3 dir;
     Vector3 direccion;
     Vector3 impacto;
@@ -40,6 +41,12 @@ public class JugadorController : MonoBehaviour
 
     //Animaciones
     public float velocidadanimacionataque;//velocidad de reproduccion es ataque del personaje
+
+    //Arrastrar a SM
+    public LayerMask layerSM;
+    GameObject SM;
+    bool puedearratrar;
+    public bool arrastrar;
 
     //componentes
     CharacterController character;
@@ -66,6 +73,10 @@ public class JugadorController : MonoBehaviour
         stats.velAtaque = 1.75f;
         animator.SetFloat("velAtaque", stats.velAtaque);
 
+        //arrastrar a SM
+        SM = GameObject.FindGameObjectWithTag("Sanmartin");
+        puedearratrar = false;
+        arrastrar = false;
 
         //pelea
         atacando = false;
@@ -151,7 +162,7 @@ public class JugadorController : MonoBehaviour
             Vector3 laterales = rightCamara * Input.GetAxisRaw("Horizontal");
             Vector3 verticales = forwardCamara * Input.GetAxisRaw("Vertical");
             direccion = Vector3.Normalize(laterales + verticales);
-            if(direccion!=Vector3.zero)
+            if(direccion!=Vector3.zero &&!arrastrar)
                 transform.forward = direccion;
 
         }
@@ -164,7 +175,8 @@ public class JugadorController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Jump"))
         {
-
+            if (arrastrar)
+                arrastrar = false;
             
             if (Time.time >= tiempoEsquive)
             {
@@ -172,8 +184,36 @@ public class JugadorController : MonoBehaviour
                 tiempoEsquive = Time.time + 1f;
             }
         }
-        
+        Arrastrar();
     }//movimiento 
+
+    private void Arrastrar()
+    {
+        if (Physics.CheckSphere(transform.position, 3, layerSM) && !atacando && !apuntando)
+        {
+            //Debug.Log(arrastrar);
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                arrastrar = !arrastrar;                
+            }
+        }
+
+        if (arrastrar&&!esquivar)
+        {
+            animator.SetBool("Corriendo", false);
+            vel = 3;
+            Vector3 direSM = SM.transform.position - transform.position;
+            direSM.y = 0;
+            transform.forward = direSM;
+            SM.GetComponent<SMController>().estado = SMController.state.Seguir;
+        }
+        else
+        {
+            SM.GetComponent<SMController>().estado = SMController.state.Caido;
+        }
+        animator.SetBool("arrastrar", arrastrar);
+    }
+
     void Movimiento()
     {
 
@@ -185,15 +225,17 @@ public class JugadorController : MonoBehaviour
         float tiempito = velencare * Time.deltaTime;
 
         transform.forward = Vector3.RotateTowards(transform.forward, direccion, tiempito, 0.0f);
-
-        if (!esquivar)
+        if (!arrastrar)
         {
-            vel = 10;
+            if (!esquivar)
+            {
+                vel = 10;
 
-        }
-        else
-        {
-            vel = velesquive;
+            }
+            else
+            {
+                vel = velesquive;
+            }
         }
         Vector3 movimiento = direccion * vel * Time.deltaTime;
         movimiento += Vector3.up * -9.8f * Time.deltaTime;
@@ -258,6 +300,7 @@ public class JugadorController : MonoBehaviour
     void Apuntar()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        
         RaycastHit hit;
         if (!activargamepad)
         {
@@ -268,8 +311,8 @@ public class JugadorController : MonoBehaviour
 
                 dir.y = 0; 
                 
-                float tiempito = velencare * Time.deltaTime;
-                transform.forward = dir;
+                //float tiempito = velencare * Time.deltaTime;
+                transform.forward = dir.normalized;
             }
         }
         else
@@ -281,7 +324,7 @@ public class JugadorController : MonoBehaviour
                 Vector3 verticales = forwardCamara * Input.GetAxisRaw("Vertical");
                 Vector3 direccion = Vector3.Normalize(laterales + verticales);
 
-                transform.forward = direccion;
+                transform.forward = direccion.normalized;
             }
         }
 

@@ -29,6 +29,7 @@ public class EspadaController : MonoBehaviour
                    
                     other.GetComponent<RealistaController>().Danio(Random.Range(20,30),transform.up);
                     CameraShaker.Instance.ShakeOnce(2f, 2f, .1f, 1f);
+                    other.GetComponent<RealistaController>().enemigo = jugador;
                     if (other.GetComponent<RealistaController>().vida <=0)
                     {
                         GameController.puntos += 50;

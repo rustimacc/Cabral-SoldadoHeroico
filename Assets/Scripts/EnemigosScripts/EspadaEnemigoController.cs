@@ -41,6 +41,15 @@ public class EspadaEnemigoController : MonoBehaviour
                     //CameraShaker.Instance.ShakeOnce(4, 4, .1f, 1);
                 }
                 break;
+            case "Sanmartin":
+                if (atacando)
+                {
+                    StartCoroutine(activarCollider());
+                    SMController.vida -= 5;
+
+                    //CameraShaker.Instance.ShakeOnce(4, 4, .1f, 1);
+                }
+                break;
         }
     }
 
