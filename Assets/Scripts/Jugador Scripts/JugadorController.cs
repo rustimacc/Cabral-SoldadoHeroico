@@ -105,6 +105,7 @@ public class JugadorController : MonoBehaviour
     {
         if (ControlTiempo.estado == ControlTiempo.TiempoEstado.desactivado&&vivo)
         {
+            //animator.SetBool("apuntando", true);
             detectarmouse();
             Controles();
             ZoomCamara();

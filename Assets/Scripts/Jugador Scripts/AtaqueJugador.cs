@@ -19,6 +19,7 @@ public class AtaqueJugador : MonoBehaviour
     public static Vector3 direBala;
     
     public GameObject bala;
+    public GameObject Rifle;
     void Start()
     {
         jugadorcontrol = GetComponent<JugadorController>();
@@ -26,16 +27,13 @@ public class AtaqueJugador : MonoBehaviour
         character = GetComponent<CharacterController>();
         sonidos = GetComponent<ControladorSonidos>();
         
-        
-
     }
 
     // Update is called once per frame
     void Update()
     {
         Ataque();
-        
-        
+        transform.GetChild(2).GetComponent<LineRenderer>().enabled = jugadorcontrol.apuntando;
     }
     IEnumerator lineadisparo()
     {
@@ -50,6 +48,7 @@ public class AtaqueJugador : MonoBehaviour
         if (Input.GetButton("Fire2"))
         {
             jugadorcontrol.apuntando = true;
+            RayoRifle();
             if (jugadorcontrol.arrastrar)
                 jugadorcontrol.arrastrar = false;
             if (Input.GetButtonDown("Fire1") && jugadorcontrol.permitirdisparo)
@@ -70,16 +69,6 @@ public class AtaqueJugador : MonoBehaviour
                     jugadorcontrol.cantidadBalas--;
                     jugadorcontrol.cantidadBalas = Mathf.Clamp(jugadorcontrol.cantidadBalas, 0, 3);
                 }
-                /*
-                else
-                {
-                    if (Time.time >= tiempoAtaque)
-                    {
-                        animator.SetTrigger("ataquebayoneta");
-                        tiempoAtaque = Time.time + 1f / 2;
-                    }
-                }
-                */
             }
 
         }
@@ -126,5 +115,33 @@ public class AtaqueJugador : MonoBehaviour
         dire.Normalize();
         if (dire.y < 0) dire.y = -dire.y; // reflect down force on the ground
         impacto += dire.normalized * fuerza / masa;
+    }
+
+    private void RayoRifle()
+    {
+        Vector3 puntoinicio = transform.GetChild(2).transform.position;
+        Vector3 dire = puntoinicio - new Vector3(-100,0,0);
+        Vector3 puntofinal = puntoinicio + transform.GetChild(2).transform.forward * 20;
+        //Vector3 puntofinal;
+        Ray rayo = new Ray(puntoinicio, transform.GetChild(2).transform.forward);
+        //Debug.Log(rayo);
+        RaycastHit hit;
+
+        if (Physics.Raycast(rayo, out hit,20))
+        {
+            if (hit.collider.tag == "enemigo")
+            {
+                puntofinal = hit.point;
+                Debug.Log("colisiona");
+            }
+        }
+
+        //puntofinal = puntoinicio + -Vector3.right * 20;
+        transform.GetChild(2).GetComponent<LineRenderer>().SetPosition(0, puntoinicio);
+        transform.GetChild(2).GetComponent<LineRenderer>().SetPosition(1, puntofinal);
+        
+
+
+        //Rifle.GetComponent<LineRenderer>().SetPosition(1, puntofinal);
     }
 }
